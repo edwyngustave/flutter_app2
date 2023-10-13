@@ -265,10 +265,6 @@ class _LoginFormState extends State<LoginForm> {
 
                         await updateFcmToken();
 
-                        // Afficher le CircularProgressIndicator pendant un certain temps
-                        await Future.delayed(Duration(
-                            seconds:
-                                5)); // Remplacez 2 par la durée souhaitée en secondes
                         try {
                           final credential = await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
