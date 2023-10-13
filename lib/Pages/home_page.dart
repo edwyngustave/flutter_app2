@@ -310,7 +310,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class EventList extends StatelessWidget {
+class EventList extends StatefulWidget {
+
+  @override
+  State<EventList> createState() => _EventListState();
+}
+
+class _EventListState extends State<EventList> {
+  int sizeOf = 0 ;
+  bool _showButtons = false;
+  int showText = 0;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -326,89 +336,241 @@ class EventList extends StatelessWidget {
           return Text('Aucun événement trouvé.');
         }
 
-        return Column(
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            final Map<String, dynamic> event =
-            document.data() as Map<String, dynamic>;
-            final String pizza = event['pizza'] ?? '';
-            final String desc = event['desc'] ?? '';
-            final String prixM = event['prixM'] ?? '';
-            final String prixL = event['prixL'] ?? '';
-            final String sauce = event['sauce'] ?? '';
+        return Consumer<PanierVar>(builder: (context, panierV, child) {
 
-            if(event['pizza']==null){
+          return Column(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              final Map<String, dynamic> event =
+              document.data() as Map<String, dynamic>;
+              final String pizza = event['pizza'] ?? '';
+              final String desc = event['desc'] ?? '';
+              final String prixM = event['prixM'] ?? '';
+              final String prixL = event['prixL'] ?? '';
+              final String sauce = event['sauce'] ?? '';
 
-            }
+              if (event['pizza'] == null) {
 
-            return GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: Colors.grey[850],
-                      title: Text("Gestion des pizzas",
-                          style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600)),
-                      content: Text(
-                          "Voulez vous commander cette pizza du jour ? ",
-                          style: GoogleFonts.poppins(color: Colors.white)),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          child: Text("Annuler",
-                              style:
-                              GoogleFonts.poppins(color: Colors.white)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              backgroundColor: Colors.grey[700],
-                              elevation: 20),
+              }
+
+              return GestureDetector(
+                onTap: () {},
+                child: Card(
+                  margin: EdgeInsets.all(3),
+                  color: Colors.grey[900],
+                  elevation: 10,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        "assets/images/queenmom.jpeg",
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Text(
+                                  "$pizza $prixM" +
+                                      "€" +
+                                      "-" +
+                                      "$prixL" +
+                                      "€",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      child: Text(
+                                        "$desc\n$sauce",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white70),
+                                      ),
+                                    ),
+                                  ),
+                                  if (_showButtons == false)
+                                    Container(
+                                      child: Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _showButtons =
+                                                  true;
+                                                });
+                                              },
+                                              icon: Icon(Icons.add),
+                                              color: Colors.white,
+                                            ),
+                                          ]),
+                                    ),
+                      if (_showButtons == true)
+                        Container(
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _showButtons =
+                                    false;
+                                  });
+                                },
+                                icon: Icon(Icons.remove),
+                                color: Colors.white,
+                              ),
+                              Column(
+                                  children: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            backgroundColor:
+                                            Colors.grey[850],
+                                            title: Text("A table !",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                    FontWeight.w600)),
+                                            content: Text(
+                                                "Votre Pizza a bien été ajouté à votre panier",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white)),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                child: Text("OK",
+                                                    style:
+                                                    GoogleFonts.poppins(
+                                                        color: Colors
+                                                            .white)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    panierV.increment();
+                                                    panierV.selectedPizz
+                                                        .add({
+                                                      "pizzaM": pizza,
+                                                      "prixM": prixM,
+                                                      "tailleM": 'MEDIUM'
+                                                    });
+                                                    //compteurPanier++ ;
+                                                    print(panierV
+                                                        .selectedPizz);
+                                                    //compteurPanier++ ;
+                                                    Navigator.pop(context);
+                                                    _showButtons =
+                                                    !_showButtons!;
+                                                  });
+                                                },
+                                                style: ElevatedButton
+                                                    .styleFrom(
+                                                    shape:
+                                                    StadiumBorder(),
+                                                    backgroundColor:
+                                                    Colors
+                                                        .grey[700],
+                                                    elevation: 20),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    "MEDIUM",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            backgroundColor:
+                                            Colors.grey[850],
+                                            title: Text("A table !",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                    FontWeight.w600)),
+                                            content: Text(
+                                                "Votre Pizza a bien été ajouté à votre panier",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white)),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                child: Text("OK",
+                                                    style:
+                                                    GoogleFonts.poppins(
+                                                        color: Colors
+                                                            .white)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    panierV.increment();
+                                                    panierV.selectedPizz
+                                                        .add({
+                                                      "pizzaL": pizza,
+                                                      "prixL": prixL,
+                                                      "tailleL": 'LARGE'
+                                                    });
+                                                    //compteurPanier++ ;
+                                                    Navigator.pop(context);
+                                                    _showButtons =
+                                                    !_showButtons!;
+                                                  });
+                                                },
+                                                style: ElevatedButton
+                                                    .styleFrom(
+                                                    shape:
+                                                    StadiumBorder(),
+                                                    backgroundColor:
+                                                    Colors
+                                                        .grey[700],
+                                                    elevation: 20),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    "LARGE",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ]),
+                            ],
+                          ),
                         ),
-                        ElevatedButton(
-                          child: Text("OUI",
-                              style:
-                              GoogleFonts.poppins(color: Colors.white)),
-                          onPressed: () {
-
-                          },
-                          style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              backgroundColor: Colors.grey[700],
-                              elevation: 20),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Card(
-                color: Color(0xFF101010),
-                child: ListTile(
-                  leading: Image.asset(
-                    "assets/images/queenmom.jpeg",
-                    fit: BoxFit.cover,
+                    ],
                   ),
-                  title: Text(
-                    "$pizza - $prixM€ - $prixL€",
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ),
-                  subtitle: Text(
-                    "$desc - $sauce",
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white70),
-                  ),
+                            ],
+                          ),
                 ),
-              ),
-            );
-          }).toList(),
+              ),]),),);
+            }).toList(),
+          );
+        }
         );
       },
     );

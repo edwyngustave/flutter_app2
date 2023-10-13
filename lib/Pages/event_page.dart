@@ -39,6 +39,21 @@ class IngredientState extends ChangeNotifier {
 class EventPage extends StatefulWidget {
   @override
   State<EventPage> createState() => _EventPageState();
+
+  final String? nomDeLaPizza;
+  final String? prixTailleM;
+  final String? prixTailleL;
+  final String? description;
+  final String? typeDeSauce;
+
+  EventPage({
+    this.nomDeLaPizza,
+    this.prixTailleM,
+    this.prixTailleL,
+    this.description,
+    this.typeDeSauce,
+  });
+
 }
 
 class _EventPageState extends State<EventPage> {
@@ -177,8 +192,10 @@ class _EventPageState extends State<EventPage> {
 
   void initState() {
     super.initState();
-    fetchIndisponibleData(); // Appel de votre méthode lors de l'initialisation de la page
+    fetchIndisponibleData();// Appel de votre méthode lors de l'initialisation de la page
   }
+
+
 
 
   Future<String> getFcmTokenFromDatabase() async {
