@@ -25,6 +25,7 @@ import 'package:flutter_app2/notification_service.dart';
 
 
 class IngredientState extends ChangeNotifier {
+
   bool _selectedIngredientState = false;
 
   bool get selectedIngredientState => _selectedIngredientState;
@@ -169,6 +170,10 @@ class _EventPageState extends State<EventPage> {
 
   var userDoc;
   String userDocFin = "" ;
+
+  Map<String, int> pizzasEnCoursSurMemeCreneau = {};
+  List<String> horraireNoDispo = [];
+
 
   void initState() {
     super.initState();
@@ -315,6 +320,83 @@ class _EventPageState extends State<EventPage> {
     print(indisponiblePizzas);
   }
 
+  Future<void> updateCreneauToTrue(String creneauNameT) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final QuerySnapshot creneauDocs = await firestore
+          .collection('CreneauH')
+          .where('hours', isEqualTo: creneauNameT)
+          .get();
+
+      if (creneauDocs.docs.isNotEmpty) {
+        // Si un document correspond au nom du créneau
+        final DocumentReference creneauDocRefT = creneauDocs.docs[0].reference;
+
+        // Utilisez la méthode update pour définir la valeur du champ "vide" sur false
+        await creneauDocRefT.update({
+          'vide': true,
+        });
+
+        print('Mise à jour réussie');
+      } else {
+        print('Document introuvable pour le créneau : $creneauNameT');
+      }
+    } catch (error) {
+      print('Erreur lors de la mise à jour : $error');
+    }
+  }
+
+  Future<void> getPizzaCountTest() async {
+    CollectionReference commandesCollection = FirebaseFirestore.instance.collection('Commandes');
+    try {
+      // Exécutez la requête Firestore
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await commandesCollection
+          .where('horraireCommande', isNotEqualTo: null)
+          .where('enCours', isEqualTo: true)
+          .get() as QuerySnapshot<Map<String, dynamic>>;
+
+      // Compter les pizzas en cours sur le même créneau
+
+      // Traitement des résultats
+      querySnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> document) {
+        String horraireCommande = document['horraireCommande'];
+        List<String> pizzas = document['pizza'].toString().split('\n');
+
+        // Mise à jour du compteur de pizzas pour chaque créneau horaire
+        pizzasEnCoursSurMemeCreneau[horraireCommande] ??= 0;
+
+        for (String pizza in pizzas) {
+          List<String> pizzaInfo = pizza.split(' - ');
+
+          if (pizzaInfo.isNotEmpty) {
+            pizzasEnCoursSurMemeCreneau[horraireCommande] = (pizzasEnCoursSurMemeCreneau[horraireCommande] ?? 0) + 1;
+
+            // Ajoutez l'horaire à horraireNoDispo si sa valeur est égale à 3
+          }
+        }
+      });
+
+      // Affichage des résultats
+      pizzasEnCoursSurMemeCreneau.forEach((key, value) {
+        print('$key : $value');
+
+        if (value == 3) {
+          horraireNoDispo.add(key);
+          updateCreneauToTrue(key);
+        }
+
+      });
+
+      // Mettre à jour les variables d'état
+      print(pizzasEnCoursSurMemeCreneau);
+      // Affichez la liste horraireNoDispo
+      print('Horaires non disponibles : $horraireNoDispo');
+    } catch (e) {
+      print("Une erreur est survenue : $e");
+    }
+  }
+
+
   Future<List<String>> fetchIndisponibleCreneau() async {
     // 1. Récupérez les créneaux avec "vide" à true
     final QuerySnapshot CreneauSnapshot = await FirebaseFirestore.instance
@@ -334,6 +416,7 @@ class _EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
+
     IngredientState ingredientState = IngredientState();
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -2250,7 +2333,7 @@ class _EventPageState extends State<EventPage> {
                         color: Colors.grey[700],
                       ),
                       onChanged: (String? newValue) {
-                        if (mysql.horraireNoDispo.contains(newValue) ||
+                        if (horraireNoDispo.contains(newValue) ||
                             indisponibleCreneau.contains(newValue)) {
                           return; // sortir de la méthode onChanged sans mettre à jour l'état si la valeur sélectionnée n'est pas disponible
                         }
@@ -2267,7 +2350,7 @@ class _EventPageState extends State<EventPage> {
                           ? horairesSoir
                               .map<DropdownMenuItem<String>>((String value) {
                               bool isRed =
-                                  mysql.horraireNoDispo.contains(value) ||
+                                  horraireNoDispo.contains(value) ||
                                       indisponibleCreneau.contains(value);
                               return DropdownMenuItem<String>(
                                 key: Key(value),
@@ -2283,7 +2366,7 @@ class _EventPageState extends State<EventPage> {
                           : horairesMidi
                               .map<DropdownMenuItem<String>>((String value1) {
                               bool isRed =
-                                  mysql.horraireNoDispo.contains(value1) ||
+                                  horraireNoDispo.contains(value1) ||
                                       indisponibleCreneau.contains(value1);
                               return DropdownMenuItem<String>(
                                 key: Key(value1),
@@ -2331,6 +2414,7 @@ class _EventPageState extends State<EventPage> {
                                 isLoadingHoraire = true;
                               });
 
+                              await getPizzaCountTest();
                               await fetchIndisponibleCreneau();
                               await getPeriodValueWhereEstIsTrue();
 

@@ -16,8 +16,11 @@ import 'inscription_page.dart';
 import 'verif_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app2/bdd.dart';
 
 class SocialPage extends StatelessWidget {
+
+  Mysql bdd = Mysql();
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +116,8 @@ class SocialPage extends StatelessWidget {
                       ),
                       SizedBox(width: 20),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MdpForget(), fullscreenDialog: true),);
+                          onPressed: () async {
+                          //  Navigator.push(context, MaterialPageRoute(builder: (context) => MdpForget(), fullscreenDialog: true),);
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),

@@ -171,6 +171,8 @@ class Mysql with ChangeNotifier {
 
 
 
+
+
   int commandeEnCours = 0;
   int commandeEnAttente = 0;
 
@@ -427,17 +429,17 @@ class Mysql with ChangeNotifier {
           String pizzasCombined = selectedPizz.isEmpty ? '' : selectedPizz.map((
               pizza) {
             if (pizza.containsKey('pizzaM')) {
-              return '${pizza['pizzaM']} - ${pizza['tailleM']} - ${pizza['prixM']}';
+              return '${pizza['pizzaM']} - ${pizza['tailleM']} - ${pizza['prixM']} ';
             } else if (pizza.containsKey('pizzaL')) {
-              return '${pizza['pizzaL']} - ${pizza['tailleL']} - ${pizza['prixL']}';
+              return '${pizza['pizzaL']} - ${pizza['tailleL']} - ${pizza['prixL']} ';
             } else if (pizza.containsKey('pizzaSupMedium')) {
-              return '${pizza['pizzaSupMedium']} - ${pizza['prixSupMedium']}';
+              return '${pizza['pizzaSupMedium']} - ${pizza['prixSupMedium']} ';
             } else if (pizza.containsKey('pizzaSupLarge')) {
-              return '${pizza['pizzaSupLarge']} - ${pizza['prixSupLarge']}';
+              return '${pizza['pizzaSupLarge']} - ${pizza['prixSupLarge']} ';
             } else if (pizza.containsKey('pizzaCompoMedium')) {
-              return 'Pizza Composée Medium : ${pizza['pizzaCompoMedium']} - ${pizza['prixCompoMedium']}';
+              return 'Pizza Composée Medium : ${pizza['pizzaCompoMedium']} - ${pizza['prixCompoMedium']} ';
             } else if (pizza.containsKey('pizzaCompoLarge')) {
-              return 'Pizza Composée Large : ${pizza['pizzaCompoLarge']} - ${pizza['prixCompoLarge']}';
+              return 'Pizza Composée Large : ${pizza['pizzaCompoLarge']} - ${pizza['prixCompoLarge']} ';
             } else {
               return null;
             }
@@ -446,14 +448,14 @@ class Mysql with ChangeNotifier {
           String wrapsCombined = selectedPizz
               .map((pizza) =>
           pizza.containsKey('wraps')
-              ? '${pizza['wraps']} - ${pizza['prixW']}'
+              ? '${pizza['wraps']} - ${pizza['prixW']} '
               : null)
               .where((wrap) => wrap != null)
               .join('\n');
           String boissonsCombined = selectedPizz
               .map((pizza) =>
           pizza.containsKey('boissons')
-              ? '${pizza['boissons']} - ${pizza['prixB']}'
+              ? '${pizza['boissons']} - ${pizza['prixB']} '
               : null)
               .where((drink) => drink != null)
               .join('\n');
@@ -604,40 +606,7 @@ class Mysql with ChangeNotifier {
     }
   } */
 
-  Future<void> getPizzaCount() async {
-    try {
-      var db = new Mysql();
 
-      List<Map<String, dynamic>> pizzaData = [];
-      List<String> horraireNoDispo = [];
-
-      await db.getConnection().then((conn) {
-        String sql = "SELECT horraireCommande, COUNT(*) AS pizzasEnCoursSurMemeCreneau FROM (SELECT horraireCommande, SUBSTRING_INDEX(SUBSTRING_INDEX(pizza, '\n', n.digit+1), '\n', -1) AS pizza_element, enCours FROM commandes JOIN (SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS n ON CHAR_LENGTH(pizza)-CHAR_LENGTH(REPLACE(pizza, '\n', '')) >= n.digit) AS pizza_elements WHERE horraireCommande IS NOT NULL AND enCours = 1 GROUP BY horraireCommande;";
-
-        conn.query(sql).then((results) {
-          for (var row in results) {
-            pizzaData.add({
-              'horraireCommande': row[0],
-              'pizzasEnCoursSurMemeCreneau': row[1],
-            });
-          }
-
-          // Ajoutez les horaires dont pizzasEnCoursSurMemeCreneau est égal à 3 à horraireNoDispo
-          for (var data in pizzaData) {
-            if (data['pizzasEnCoursSurMemeCreneau'] == 3) {
-              horraireNoDispo.add(data['horraireCommande'].toString());
-            }
-          }
-          this.pizzaData = pizzaData;
-          this.horraireNoDispo = horraireNoDispo;
-          notifyListeners();
-          conn.close();
-          });
-      });
-    } catch (e) {
-      print("Une erreur est survenue : $e");
-      }
-  }
 
   Future<void> getPizzaCount2(String hoursCrenn) async {
     try {
