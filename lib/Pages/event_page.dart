@@ -39,21 +39,7 @@ class IngredientState extends ChangeNotifier {
 class EventPage extends StatefulWidget {
   @override
   State<EventPage> createState() => _EventPageState();
-
-  final String? nomDeLaPizza;
-  final String? prixTailleM;
-  final String? prixTailleL;
-  final String? description;
-  final String? typeDeSauce;
-
-  EventPage({
-    this.nomDeLaPizza,
-    this.prixTailleM,
-    this.prixTailleL,
-    this.description,
-    this.typeDeSauce,
-  });
-
+  
 }
 
 class _EventPageState extends State<EventPage> {
