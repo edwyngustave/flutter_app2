@@ -30,7 +30,6 @@ class _TestPageState extends State<TestPage> {
   List<String> UsersFire = [];
   List<String> UsersBanni = [];
   List<String> indisponibleCreneau = [];
-  Map<String, int> pizzasEnCoursSurMemeCreneau = {};
   List<String> horraireNoDispo = [];
 
 
@@ -133,55 +132,45 @@ class _TestPageState extends State<TestPage> {
     }
   }
 
-  Future<void> getPizzaCountTest() async {
+  int valueFinal = 0 ;
+
+  Future<int> getPizzaCountTest(String hKey) async {
     CollectionReference commandesCollection = FirebaseFirestore.instance.collection('Commandes');
+    int pizzaCount = 0;
+
     try {
       // Exécutez la requête Firestore
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await commandesCollection
           .where('horraireCommande', isNotEqualTo: null)
           .where('enCours', isEqualTo: true)
+          .where('horraireCommande', isEqualTo: hKey)
           .get() as QuerySnapshot<Map<String, dynamic>>;
-
-      // Compter les pizzas en cours sur le même créneau
 
       // Traitement des résultats
       querySnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> document) {
-        String horraireCommande = document['horraireCommande'];
         List<String> pizzas = document['pizza'].toString().split('\n');
-
-        // Mise à jour du compteur de pizzas pour chaque créneau horaire
-        pizzasEnCoursSurMemeCreneau[horraireCommande] ??= 0;
 
         for (String pizza in pizzas) {
           List<String> pizzaInfo = pizza.split(' - ');
 
           if (pizzaInfo.isNotEmpty) {
-            pizzasEnCoursSurMemeCreneau[horraireCommande] = (pizzasEnCoursSurMemeCreneau[horraireCommande] ?? 0) + 1;
-
+            pizzaCount++;
             // Ajoutez l'horaire à horraireNoDispo si sa valeur est égale à 3
           }
         }
       });
 
-      // Affichage des résultats
-      pizzasEnCoursSurMemeCreneau.forEach((key, value) {
-        print('$key : $value');
+      // Affichage du résultat (facultatif)
+      print('$hKey : $pizzaCount');
 
-        if (value == 3) {
-          horraireNoDispo.add(key);
-          updateCreneauToTrue(key);
-        }
-
-      });
-
-      // Mettre à jour les variables d'état
-      print(pizzasEnCoursSurMemeCreneau);
-      // Affichez la liste horraireNoDispo
-      print('Horaires non disponibles : $horraireNoDispo');
     } catch (e) {
       print("Une erreur est survenue : $e");
     }
+
+    return pizzaCount;
   }
+
+
 
 
   Future<void> updateUserBanniToTrue(String userName) async {
@@ -2600,10 +2589,12 @@ class _TestPageState extends State<TestPage> {
                             ? Colors.white
                             : Colors.blue),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+
+                    int pizzaCount = await getPizzaCountTest(horaires[index].toString());
                     // Affichez la valeur de "pizzasEnCoursSurMemeCreneau"
                     print(
-                        "pizzasEnCoursSurMemeCreneau: ${mysql.pizzaData2.isNotEmpty ? mysql.pizzaData2[0]['pizzasEnCoursSurMemeCreneau'] : 0}");
+                        "pizzasEnCoursSurMemeCreneau: $pizzaCount");
 
                     showDialog(
                       context: context,
@@ -2615,7 +2606,7 @@ class _TestPageState extends State<TestPage> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600)),
                           content: Text(
-                              "Vous avez actuellement ${mysql.pizzaData2.isNotEmpty ? mysql.pizzaData2[0]['pizzasEnCoursSurMemeCreneau'] : 0} pizza(s) sur ce créneau horaire. Voulez-vous le bloquer ? ",
+                              "Vous avez actuellement $pizzaCount pizza(s) sur ce créneau horaire. Voulez-vous le bloquer ? ",
                               style: GoogleFonts.poppins(color: Colors.white)),
                           actions: <Widget>[
                             ElevatedButton(
@@ -2828,7 +2819,6 @@ class _TestPageState extends State<TestPage> {
                 color: Colors.white,
               ),
               onTap: () async {
-                await getPizzaCountTest();
                 await fetchIndisponibleCreneau();
                 await getHorairesFromFirestore();
                 setState(() {
