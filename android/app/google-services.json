@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "902871875854",
+    "project_id": "ilovepizza-fd570",
+    "storage_bucket": "ilovepizza-fd570.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902871875854:android:f1f238240fde587a82175f",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCooRcSSqc0n9OG-goVSrTwCOq54UxXZMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
