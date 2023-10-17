@@ -248,7 +248,6 @@ class _VerifInfoPageState extends State<VerifInfoPage> {
 
 
                         if(_code.text == codeProv ){
-                          await updateFcmToken();
                         print("done!");
                         //ajout des information de l'utilisateur dans la bdd
                        ajouterDocument(widget.addr.toString(), widget.email.toString(), widget.nom.toString(), widget.prenom.toString(), widget.numero.toString(), "Users");
@@ -258,6 +257,8 @@ class _VerifInfoPageState extends State<VerifInfoPage> {
                           email: widget.email.toString(),
                           password: widget.mdpFinal.toString(),
                         );
+
+                       await updateFcmToken();
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

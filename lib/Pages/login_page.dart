@@ -263,14 +263,14 @@ class _LoginFormState extends State<LoginForm> {
                         });
 
 
-                        await updateFcmToken();
-
                         try {
                           final credential = await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                             email: _mail.text.toString(),
                             password: _mdp.text.toString(),
                           );
+
+                       await updateFcmToken();
 
                           getBoss(_mail.text.toString());
                           mysql.saveCredential(
@@ -297,7 +297,7 @@ class _LoginFormState extends State<LoginForm> {
                               await getBoss(_mail.text.toString());
                           print(estBoss);
                           if (estBoss == true) {
-                            await updateFcmToken();
+                           // await updateFcmToken();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Container(

@@ -36,9 +36,55 @@ class _ProfilPageState extends State<ProfilPage> {
   int _selectedMenu = 0;
   String finalDate = "";
   bool isLoadingCommandeProfil = false ;
+  List<Map<String, dynamic>> commandesDataListClient = [];
+  String userId = "";
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool emailDejaPris = false ;
+
+
+
+  Future<void> fetchDataClient() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      // L'ID de l'utilisateur actuellement connecté
+      userId = user.uid;
+      print('Current User ID: $userId');
+    } else {
+      // L'utilisateur n'est pas connecté
+      print('No user is currently signed in.');
+    }
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Commandes')
+          .where('iduserCom', isEqualTo: userId)
+          .where('estFinie', isEqualTo: true)
+          //.orderBy('createdAt')
+          .get();
+
+      List<Map<String, dynamic>> dataList = [];
+
+      querySnapshot.docs.forEach((document) {
+        Map<String, dynamic> commandeData =
+        document.data() as Map<String, dynamic>;
+
+        commandeData['documentId'] = document.id;
+
+        dataList.add(commandeData);
+      });
+
+      setState(() {
+        commandesDataListClient = dataList;
+      });
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
 
   Future<void> checkIfEmailExists(String email) async {
     try {
@@ -94,50 +140,92 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget build(BuildContext context) {
     Widget listCommande = Consumer<Mysql>(
       builder: (context, mysql, child) {
-        List<Widget> commandes = [];
-        for (var i = 0; i < mysql.id6.length; i++)
-          commandes.add(
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Container(
-                width: double.infinity,
-                  child: Card(
-                    color: Colors.grey[900],
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          if (mysql.pizza6[i].isNotEmpty && (!mysql.pizza6[i].contains("null") || mysql.pizza6[i] != null))
-                            Text("Pizza : " + mysql.pizza6[i] + '€', style: TextStyle(color: Colors.white)),
-                          if (mysql.wrap6[i].isNotEmpty && (!mysql.wrap6[i].contains("null") || mysql.wrap6[i] != null))
-                            SizedBox(height: 10,),
-                          if (mysql.wrap6[i].isNotEmpty && (!mysql.wrap6[i].contains("null") || mysql.wrap6[i] != null))
-                            Text("Wrap : " + mysql.wrap6[i] + '€', style: TextStyle(color: Colors.white)),
-                          if (mysql.boisson6[i].isNotEmpty && (!mysql.boisson6[i].contains("null") || mysql.boisson6[i] != null))
-                            SizedBox(height: 10,),
-                          if (mysql.boisson6[i].isNotEmpty && (!mysql.boisson6[i].contains("null") || mysql.boisson6[i] != null))
-                            Text("Boissons : " + mysql.boisson6[i] + '€', style: TextStyle(color: Colors.white)),
-                          if (mysql.dessert6[i] != null && mysql.dessert6[i].isNotEmpty && (!mysql.dessert6[i].contains("null")))
-                            SizedBox(height: 10,),
-                          if (mysql.dessert6[i] != null && mysql.dessert6[i].isNotEmpty && (!mysql.dessert6[i].contains("null")))
-                            Text("Desserts : " + mysql.dessert6[i] + '€', style: TextStyle(color: Colors.white)),
-                          if (mysql.commentaire6[i] != null && mysql.commentaire6[i].isNotEmpty && (!mysql.commentaire6[i].contains("null")))
-                            SizedBox(height: 10,),
-                          if (mysql.commentaire6[i] != null && mysql.commentaire6[i].isNotEmpty && (!mysql.commentaire6[i].contains("null")))
-                            Text("Commentaire : " + mysql.commentaire6[i], style: TextStyle(color: Colors.red, fontWeight: FontWeight.w800)),
-                          SizedBox(height: 10,),
-                          Text(mysql.prixCommande6[i] + "€", style: TextStyle(fontWeight: FontWeight.w800, color: Colors.blue, fontSize: 16)),
-                          SizedBox(height: 10,),
-                          Text(finalDate,
-                              style: TextStyle(color: Colors.green)),
-                        ],
+        return Column(
+          children: [
+            for (var commandeDataClient in commandesDataListClient)
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    print(mysql.wrap);
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    child: Card(
+                      color: Colors.grey[900],
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Pizza: ${commandeDataClient['pizza']?.isNotEmpty == true ? commandeDataClient['pizza'] : 'Non spécifié'}",
+                              style:
+                              TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Wrap: ${commandeDataClient['wrap']?.isNotEmpty == true ? commandeDataClient['wrap'] : 'Non spécifié'}",
+                              style:
+                              TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Boissons: ${commandeDataClient['boissons']?.isNotEmpty == true ? commandeDataClient['boissons'] : 'Non spécifié'}",
+                              style:
+                              TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Horaire souhaité : ${commandeDataClient['horraireCommande']?.isNotEmpty == true ? commandeDataClient['horraireCommande'] : 'Non spécifié'}",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w800),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Prix Commande : ${commandeDataClient['prixTotalCommande'] != null ? '${commandeDataClient['prixTotalCommande']}€' : 'Non spécifié'}",
+                              style: TextStyle(
+                                color: Colors.lightGreenAccent,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Date de la commande: ${commandeDataClient['dateCommande'] != null ? DateFormat('dd-MM-yyyy HH:mm').format(DateTime.parse(commandeDataClient['dateCommande'])) : 'date inconnue'}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.blue,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ),
               ),
-            ),
-          );
-        return Column(children: commandes);
+          ],
+        );
+
       },
     );
 
@@ -427,21 +515,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         isLoadingCommandeProfil = true;
                       });
 
-                      mysql.getCommentaireAdminAClient();
-                      mysql.getCommandeClient2();
-                      for(int i = 0; i<mysql.dateCommande6.length;i++){
-                        if(mysql.dateCommande6[i].contains("000Z")){
-                          mysql.dateCommande6[i] = mysql.dateCommande6[i].replaceAll('.000Z', '');
-                          String finalDate = mysql.dateCommande6[i] ;
-                          this.finalDate = finalDate;
-                          DateTime now = DateTime.now();
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-                          print('La date actuelle est : $formattedDate');
-                        }}
-
-                      await Future.delayed(Duration(
-                          seconds:
-                          4));
+                      await fetchDataClient();
 
                       setState(() {
                         isLoadingCommandeProfil = false;
@@ -470,7 +544,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      "Commandes",
+                                      "Commandes terminées",
                                       style: GoogleFonts.poppins(
                                           fontSize: 16,
                                           fontWeight: _selectedMenu == 4 ? FontWeight.w600 :FontWeight.w400,
@@ -508,12 +582,6 @@ class _ProfilPageState extends State<ProfilPage> {
                         shape: StadiumBorder(),
                         backgroundColor: Colors.grey[900]),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      checkIfEmailExists('edwyn@hotmail.com');
-                    },
-                    child: Text('Afficher la notification'),
-                  )
                 ],
               ),
             ),

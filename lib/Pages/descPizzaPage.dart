@@ -197,7 +197,7 @@ class _DescPizzaPageState extends State<DescPizzaPage> {
                                              //ici que se passe la bail de tri
                                              print(ingredientTypes);
                                              selectedPerso = 1;
-                                                                                          Navigator.pop(context);
+                                             Navigator.pop(context);
                                            });
                                          },
                                          style: ElevatedButton.styleFrom(
