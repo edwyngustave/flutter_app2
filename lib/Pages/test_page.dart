@@ -2574,123 +2574,125 @@ class _TestPageState extends State<TestPage> {
     Widget listcreneau = Consumer<Mysql>(builder: (context, mysql, child) {
       List<bool> _selectedCreneau =
           List.generate(horaires.length, (_) => false);
-      return Wrap(
-          spacing: 15,
-          children: List.generate(horaires.length, (index) {
-            return Column(
-              children: <Widget>[
-                TextButton(
-                  child: Text(
-                    horaires[index],
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: indisponibleCreneau.contains(horaires[index])
-                            ? Colors.white
-                            : Colors.blue),
+      return SingleChildScrollView(
+        child: Wrap(
+            spacing: 15,
+            children: List.generate(horaires.length, (index) {
+              return Column(
+                children: <Widget>[
+                  TextButton(
+                    child: Text(
+                      horaires[index],
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: indisponibleCreneau.contains(horaires[index])
+                              ? Colors.white
+                              : Colors.blue),
+                    ),
+                    onPressed: () async {
+
+                      int pizzaCount = await getPizzaCountTest(horaires[index].toString());
+                      // Affichez la valeur de "pizzasEnCoursSurMemeCreneau"
+                      print(
+                          "pizzasEnCoursSurMemeCreneau: $pizzaCount");
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.grey[850],
+                            title: Text("A table !",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600)),
+                            content: Text(
+                                "Vous avez actuellement $pizzaCount pizza(s) sur ce créneau horaire. Voulez-vous le bloquer ? ",
+                                style: GoogleFonts.poppins(color: Colors.white)),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                child: Text("Bloquer",
+                                    style:
+                                        GoogleFonts.poppins(color: Colors.white)),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedCreneau[index] =
+                                        !_selectedCreneau[index];
+                                    mysql.creneauSelected.add(horaires[index]);
+                                    updateCreneauToTrue(horaires[index]);
+                                    print(mysql.creneauSelected);
+                                    print(horaires.indexOf(horaires[index]));
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    backgroundColor: Colors.grey[700],
+                                    elevation: 20),
+                              ),
+                              ElevatedButton(
+                                child: Text("Débloquer",
+                                    style:
+                                        GoogleFonts.poppins(color: Colors.white)),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedCreneau[index] = false;
+                                    mysql.creneauSelected.remove(horaires[index]);
+                                    updateCreneauToFalse(horaires[index]);
+                                    print(mysql.creneauSelected);
+                                    print(horaires.indexOf(horaires[index]));
+                                    Navigator.pop(context);
+                                    print(horaires
+                                        .indexOf(horaires[index])
+                                        .toInt());
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    backgroundColor: Colors.grey[700],
+                                    elevation: 20),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                        shape: StadiumBorder(),
+                        backgroundColor:
+                            mysql.creneauSelected.contains(horaires[index])
+                                ? Colors.grey[600]
+                                : Colors.grey[900]),
                   ),
-                  onPressed: () async {
-
-                    int pizzaCount = await getPizzaCountTest(horaires[index].toString());
-                    // Affichez la valeur de "pizzasEnCoursSurMemeCreneau"
-                    print(
-                        "pizzasEnCoursSurMemeCreneau: $pizzaCount");
-
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.grey[850],
-                          title: Text("A table !",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600)),
-                          content: Text(
-                              "Vous avez actuellement $pizzaCount pizza(s) sur ce créneau horaire. Voulez-vous le bloquer ? ",
-                              style: GoogleFonts.poppins(color: Colors.white)),
-                          actions: <Widget>[
-                            ElevatedButton(
-                              child: Text("Bloquer",
-                                  style:
-                                      GoogleFonts.poppins(color: Colors.white)),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedCreneau[index] =
-                                      !_selectedCreneau[index];
-                                  mysql.creneauSelected.add(horaires[index]);
-                                  updateCreneauToTrue(horaires[index]);
-                                  print(mysql.creneauSelected);
-                                  print(horaires.indexOf(horaires[index]));
-                                  Navigator.pop(context);
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(),
-                                  backgroundColor: Colors.grey[700],
-                                  elevation: 20),
-                            ),
-                            ElevatedButton(
-                              child: Text("Débloquer",
-                                  style:
-                                      GoogleFonts.poppins(color: Colors.white)),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedCreneau[index] = false;
-                                  mysql.creneauSelected.remove(horaires[index]);
-                                  updateCreneauToFalse(horaires[index]);
-                                  print(mysql.creneauSelected);
-                                  print(horaires.indexOf(horaires[index]));
-                                  Navigator.pop(context);
-                                  print(horaires
-                                      .indexOf(horaires[index])
-                                      .toInt());
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(),
-                                  backgroundColor: Colors.grey[700],
-                                  elevation: 20),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  style: TextButton.styleFrom(
+                  SizedBox(height: 10),
+                ],
+              );
+            }).toList()
+              ..add(Column(
+                children: <Widget>[
+                  TextButton(
+                    child: Text(
+                      'TOUT EST DISPONIBLE',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.white),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        mysql.creneauSelected.clear();
+                        updateAllCreneauToFalse();
+                      });
+                    },
+                    style: TextButton.styleFrom(
                       shape: StadiumBorder(),
-                      backgroundColor:
-                          mysql.creneauSelected.contains(horaires[index])
-                              ? Colors.grey[600]
-                              : Colors.grey[900]),
-                ),
-                SizedBox(height: 10),
-              ],
-            );
-          }).toList()
-            ..add(Column(
-              children: <Widget>[
-                TextButton(
-                  child: Text(
-                    'TOUT EST DISPONIBLE',
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.white),
+                      backgroundColor: Colors.grey[900],
+                    ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      mysql.creneauSelected.clear();
-                      updateAllCreneauToFalse();
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    shape: StadiumBorder(),
-                    backgroundColor: Colors.grey[900],
-                  ),
-                ),
-                SizedBox(height: 10),
-              ],
-            )));
+                  SizedBox(height: 10),
+                ],
+              ))),
+      );
     });
 
     ///////////////////////////////////////////////////

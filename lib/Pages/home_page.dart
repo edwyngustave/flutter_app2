@@ -158,12 +158,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 10,),
                   if(selectedAddress!=null)
-                  Text(
-                    "$selectedAddress",
-                    style: GoogleFonts.poppins(
-                        color: Colors.orangeAccent,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800),
+                  DelayedAnimation(delay:200,
+                    child: Text(
+                      "$selectedAddress",
+                      style: GoogleFonts.poppins(
+                          color: Colors.orangeAccent,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800),
+                    ),
                   ),
                   if(selectedAddress==null)
                   Text(
@@ -212,7 +214,6 @@ class _HomePageState extends State<HomePage> {
                       print(
                           'pour ${data['horraireCommande']} : ${data['pizzasEnCoursSurMemeCreneau']}');
                     }
-                    mysql.getCommentaireAdminAClient();
                     _refreshButton = 1;
                   });
                 },
@@ -224,80 +225,82 @@ class _HomePageState extends State<HomePage> {
             ),
             if (_refreshButton == 1)
               for (var commandeData in commandesDataListEnCours)
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    width: double.infinity,
-                    child: Card(
-                      // shape: StadiumBorder(),
-                      color: Colors.grey[900],
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Pizza : ${commandeData['pizza']?.isNotEmpty == true ? commandeData['pizza'] : 'Non spécifié'}",
-                              style:
-                              TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Wrap : ${commandeData['wrap']?.isNotEmpty == true ? commandeData['wrap'] : 'Non spécifié'}",
-                              style:
-                              TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Boissons : ${commandeData['boissons']?.isNotEmpty == true ? commandeData['boissons'] : 'Non spécifié'}",
-                              style:
-                              TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Prête pour : ${commandeData['horraireCommande']?.isNotEmpty == true ? commandeData['horraireCommande'] : 'Non spécifié'}",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w800),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Prix Commande : ${commandeData['prixTotalCommande'] != null ? '${commandeData['prixTotalCommande']}€' : 'Non spécifié'}",
-                              style: TextStyle(
-                                color: Colors.lightGreenAccent,
-                                fontWeight: FontWeight.w800,
+                DelayedAnimation(delay:200,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      width: double.infinity,
+                      child: Card(
+                        // shape: StadiumBorder(),
+                        color: Colors.grey[900],
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Vous serez notifié si votre commande est prête avant l'heure :) ",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.w300),
-                              textAlign: TextAlign.center,
-                            ),
+                              Text(
+                                "Pizza : ${commandeData['pizza']?.isNotEmpty == true ? commandeData['pizza'] : 'Non spécifié'}",
+                                style:
+                                TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Wrap : ${commandeData['wrap']?.isNotEmpty == true ? commandeData['wrap'] : 'Non spécifié'}",
+                                style:
+                                TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Boissons : ${commandeData['boissons']?.isNotEmpty == true ? commandeData['boissons'] : 'Non spécifié'}",
+                                style:
+                                TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Prête pour : ${commandeData['horraireCommande']?.isNotEmpty == true ? commandeData['horraireCommande'] : 'Non spécifié'}",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w800),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Prix Commande : ${commandeData['prixTotalCommande'] != null ? '${commandeData['prixTotalCommande']}€' : 'Non spécifié'}",
+                                style: TextStyle(
+                                  color: Colors.lightGreenAccent,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Vous serez notifié si votre commande est prête avant l'heure :) ",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.w300),
+                                textAlign: TextAlign.center,
+                              ),
 
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -309,7 +312,6 @@ class _HomePageState extends State<HomePage> {
     ]);
   }
 }
-
 class EventList extends StatefulWidget {
 
   @override
@@ -419,143 +421,153 @@ class _EventListState extends State<EventList> {
                         Container(
                           child: Row(
                             children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _showButtons =
-                                    false;
-                                  });
-                                },
-                                icon: Icon(Icons.remove),
-                                color: Colors.white,
+                              DelayedAnimation(delay:200,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _showButtons =
+                                      false;
+                                    });
+                                  },
+                                  icon: Icon(Icons.remove),
+                                  color: Colors.white,
+                                ),
                               ),
                               Column(
                                   children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                            Colors.grey[850],
-                                            title: Text("A table !",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                    FontWeight.w600)),
-                                            content: Text(
-                                                "Votre Pizza a bien été ajouté à votre panier",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.white)),
-                                            actions: <Widget>[
-                                              ElevatedButton(
-                                                child: Text("OK",
-                                                    style:
-                                                    GoogleFonts.poppins(
-                                                        color: Colors
-                                                            .white)),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    panierV.increment();
-                                                    panierV.selectedPizz
-                                                        .add({
-                                                      "pizzaM": pizza,
-                                                      "prixM": prixM,
-                                                      "tailleM": 'MEDIUM'
-                                                    });
-                                                    //compteurPanier++ ;
-                                                    print(panierV
-                                                        .selectedPizz);
-                                                    //compteurPanier++ ;
-                                                    Navigator.pop(context);
-                                                    _showButtons =
-                                                    !_showButtons!;
-                                                  });
-                                                },
-                                                style: ElevatedButton
-                                                    .styleFrom(
-                                                    shape:
-                                                    StadiumBorder(),
-                                                    backgroundColor:
-                                                    Colors
-                                                        .grey[700],
-                                                    elevation: 20),
+                                DelayedAnimation(delay:200,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return DelayedAnimation(delay:200,
+                                              child: AlertDialog(
+                                                backgroundColor:
+                                                Colors.grey[850],
+                                                title: Text("A table !",
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                        FontWeight.w600)),
+                                                content: Text(
+                                                    "Votre Pizza a bien été ajouté à votre panier",
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors.white)),
+                                                actions: <Widget>[
+                                                  ElevatedButton(
+                                                    child: Text("OK",
+                                                        style:
+                                                        GoogleFonts.poppins(
+                                                            color: Colors
+                                                                .white)),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        panierV.increment();
+                                                        panierV.selectedPizz
+                                                            .add({
+                                                          "pizzaM": pizza,
+                                                          "prixM": prixM,
+                                                          "tailleM": 'MEDIUM'
+                                                        });
+                                                        //compteurPanier++ ;
+                                                        print(panierV
+                                                            .selectedPizz);
+                                                        //compteurPanier++ ;
+                                                        Navigator.pop(context);
+                                                        _showButtons =
+                                                        !_showButtons!;
+                                                      });
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                        shape:
+                                                        StadiumBorder(),
+                                                        backgroundColor:
+                                                        Colors
+                                                            .grey[700],
+                                                        elevation: 20),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Text(
-                                    "MEDIUM",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                            );
+                                          },
+                                        );
+                                      });
+                                    },
+                                    child: Text(
+                                      "MEDIUM",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                            Colors.grey[850],
-                                            title: Text("A table !",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                    FontWeight.w600)),
-                                            content: Text(
-                                                "Votre Pizza a bien été ajouté à votre panier",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.white)),
-                                            actions: <Widget>[
-                                              ElevatedButton(
-                                                child: Text("OK",
-                                                    style:
-                                                    GoogleFonts.poppins(
-                                                        color: Colors
-                                                            .white)),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    panierV.increment();
-                                                    panierV.selectedPizz
-                                                        .add({
-                                                      "pizzaL": pizza,
-                                                      "prixL": prixL,
-                                                      "tailleL": 'LARGE'
-                                                    });
-                                                    //compteurPanier++ ;
-                                                    Navigator.pop(context);
-                                                    _showButtons =
-                                                    !_showButtons!;
-                                                  });
-                                                },
-                                                style: ElevatedButton
-                                                    .styleFrom(
-                                                    shape:
-                                                    StadiumBorder(),
-                                                    backgroundColor:
-                                                    Colors
-                                                        .grey[700],
-                                                    elevation: 20),
+                                DelayedAnimation(delay:200,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return DelayedAnimation(delay:200,
+                                              child: AlertDialog(
+                                                backgroundColor:
+                                                Colors.grey[850],
+                                                title: Text("A table !",
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                        FontWeight.w600)),
+                                                content: Text(
+                                                    "Votre Pizza a bien été ajouté à votre panier",
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors.white)),
+                                                actions: <Widget>[
+                                                  ElevatedButton(
+                                                    child: Text("OK",
+                                                        style:
+                                                        GoogleFonts.poppins(
+                                                            color: Colors
+                                                                .white)),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        panierV.increment();
+                                                        panierV.selectedPizz
+                                                            .add({
+                                                          "pizzaL": pizza,
+                                                          "prixL": prixL,
+                                                          "tailleL": 'LARGE'
+                                                        });
+                                                        //compteurPanier++ ;
+                                                        Navigator.pop(context);
+                                                        _showButtons =
+                                                        !_showButtons!;
+                                                      });
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                        shape:
+                                                        StadiumBorder(),
+                                                        backgroundColor:
+                                                        Colors
+                                                            .grey[700],
+                                                        elevation: 20),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Text(
-                                    "LARGE",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                            );
+                                          },
+                                        );
+                                      });
+                                    },
+                                    child: Text(
+                                      "LARGE",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
                               ]),

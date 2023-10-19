@@ -70,6 +70,7 @@ class _EventPageState extends State<EventPage> {
   int _selectedPage = 0;
   int _selectedStep = 0;
   bool setHorraire = false;
+  bool msgIngredientMiss = false ;
 
   String selectedMinutes = "";
 
@@ -548,6 +549,7 @@ class _EventPageState extends State<EventPage> {
                                                 (context, mysql, child) {
                                               return TextButton(
                                                 onPressed: () {
+                                                  msgIngredientMiss = true;
                                                   setState(() {
                                                     findIndisponibleIngredients(
                                                         desc,
@@ -613,117 +615,123 @@ class _EventPageState extends State<EventPage> {
                                                             builder:
                                                                 (BuildContext
                                                                     context) {
-                                                              return AlertDialog(
-                                                                backgroundColor:
-                                                                    Colors.grey[
-                                                                        850],
-                                                                title: Text(
-                                                                    "Remplacer L'ingredient indisponible",
-                                                                    style: GoogleFonts.poppins(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight.w600)),
-                                                                content: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Text(
-                                                                        "Les ingrédients indisponibles sont : ",
-                                                                        style: GoogleFonts.poppins(
-                                                                            color:
-                                                                                Colors.white)),
-                                                                    SizedBox(
-                                                                      height: 5,
+                                                              return DelayedAnimation(delay:100,
+                                                                child: AlertDialog(
+                                                                  backgroundColor:
+                                                                      Colors.grey[
+                                                                          850],
+                                                                  title: Text(
+                                                                      "Remplacer L'ingredient indisponible",
+                                                                      style: GoogleFonts.poppins(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.w600)),
+                                                                  content: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      Text(
+                                                                          "Les ingrédients indisponibles sont : ",
+                                                                          style: GoogleFonts.poppins(
+                                                                              color:
+                                                                                  Colors.white)),
+                                                                      SizedBox(
+                                                                        height: 5,
+                                                                      ),
+                                                                      Text(
+                                                                          /* "${mysql.ingreList.join(', ')} "  bbb + */
+                                                                          indisponibleIngredientsTrouves.join(
+                                                                              ', '),
+                                                                          style: GoogleFonts.poppins(
+                                                                              color:
+                                                                                  Colors.red)),
+                                                                      SizedBox(
+                                                                          height:
+                                                                              20),
+                                                                      Text(
+                                                                          "En appuyant sur 'OK' vous serez rediriger vers "
+                                                                          "la description de la pizza, il vous suffira de cliquer "
+                                                                          "sur 'Ajouter au panier', choisir la taille de votre pizza et cliquer "
+                                                                          "sur 'PERSONNALISER' et enfin choisir votre ingredient de remplacement. ",
+                                                                          style: GoogleFonts.poppins(
+                                                                              color:
+                                                                                  Colors.white)),
+                                                                    ],
+                                                                  ),
+                                                                  actions: <Widget>[
+                                                                    ChangeNotifierProvider<
+                                                                        IngredientState>(
+                                                                      create: (context) =>
+                                                                          IngredientState(),
+                                                                      child:
+                                                                          ElevatedButton(
+                                                                        child: Text(
+                                                                            "OK",
+                                                                            style:
+                                                                                GoogleFonts.poppins(color: Colors.white)),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          await Future.delayed(Duration(
+                                                                              milliseconds:
+                                                                                  1000));
+                                                                          var ingredientState = Provider.of<IngredientState>(
+                                                                              context,
+                                                                              listen:
+                                                                                  false);
+                                                                          ingredientState
+                                                                              .setSelectedIngredientState(true);
+                                                                          setState(() {
+                                                                            msgIngredientMiss=false;
+                                                                          });
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                builder: (context) => DescPizzaPage(
+                                                                                    recipe: Recipe("assets/images/$logo.jpeg", "$desc", "$pizza", "$prixM", "$prixL", "$taille"),
+                                                                                    ingredientState: ingredientState,
+                                                                                    // Ajoutez cette ligne pour passer ingredientState
+                                                                                    indisponibleIngredientsTrouves: indisponibleIngredientsTrouves),
+                                                                              ));
+                                                                        },
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            shape:
+                                                                                StadiumBorder(),
+                                                                            backgroundColor: Colors.grey[
+                                                                                700],
+                                                                            elevation:
+                                                                                20),
+                                                                      ),
                                                                     ),
-                                                                    Text(
-                                                                        /* "${mysql.ingreList.join(', ')} "  bbb + */
-                                                                        indisponibleIngredientsTrouves.join(
-                                                                            ', '),
-                                                                        style: GoogleFonts.poppins(
-                                                                            color:
-                                                                                Colors.red)),
-                                                                    SizedBox(
-                                                                        height:
-                                                                            20),
-                                                                    Text(
-                                                                        "En appuyant sur 'OK' vous serez rediriger vers "
-                                                                        "la description de la pizza, il vous suffira de cliquer "
-                                                                        "sur 'Ajouter au panier', choisir la taille de votre pizza et cliquer "
-                                                                        "sur 'PERSONNALISER' et enfin choisir votre ingredient de remplacement. ",
-                                                                        style: GoogleFonts.poppins(
-                                                                            color:
-                                                                                Colors.white)),
-                                                                  ],
-                                                                ),
-                                                                actions: <Widget>[
-                                                                  ChangeNotifierProvider<
-                                                                      IngredientState>(
-                                                                    create: (context) =>
-                                                                        IngredientState(),
-                                                                    child:
-                                                                        ElevatedButton(
+                                                                    ElevatedButton(
                                                                       child: Text(
-                                                                          "OK",
-                                                                          style:
-                                                                              GoogleFonts.poppins(color: Colors.white)),
+                                                                          "Annuler",
+                                                                          style: GoogleFonts.poppins(
+                                                                              color:
+                                                                                  Colors.white)),
                                                                       onPressed:
-                                                                          () async {
-                                                                        await Future.delayed(Duration(
-                                                                            milliseconds:
-                                                                                1000));
-                                                                        var ingredientState = Provider.of<IngredientState>(
-                                                                            context,
-                                                                            listen:
-                                                                                false);
-                                                                        ingredientState
-                                                                            .setSelectedIngredientState(true);
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => DescPizzaPage(
-                                                                                  recipe: Recipe("assets/images/$logo.jpeg", "$desc", "$pizza", "$prixM", "$prixL", "$taille"),
-                                                                                  ingredientState: ingredientState,
-                                                                                  // Ajoutez cette ligne pour passer ingredientState
-                                                                                  indisponibleIngredientsTrouves: indisponibleIngredientsTrouves),
-                                                                            ));
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          selectedIngredientState =
+                                                                              false;
+                                                                          msgIngredientMiss = false;
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        });
                                                                       },
                                                                       style: ElevatedButton.styleFrom(
                                                                           shape:
                                                                               StadiumBorder(),
-                                                                          backgroundColor: Colors.grey[
-                                                                              700],
+                                                                          backgroundColor:
+                                                                              Colors.grey[
+                                                                                  700],
                                                                           elevation:
                                                                               20),
                                                                     ),
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    child: Text(
-                                                                        "Annuler",
-                                                                        style: GoogleFonts.poppins(
-                                                                            color:
-                                                                                Colors.white)),
-                                                                    onPressed:
-                                                                        () {
-                                                                      setState(
-                                                                          () {
-                                                                        selectedIngredientState =
-                                                                            false;
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      });
-                                                                    },
-                                                                    style: ElevatedButton.styleFrom(
-                                                                        shape:
-                                                                            StadiumBorder(),
-                                                                        backgroundColor:
-                                                                            Colors.grey[
-                                                                                700],
-                                                                        elevation:
-                                                                            20),
-                                                                  ),
-                                                                ],
+                                                                  ],
+                                                                ),
                                                               );
                                                             },
                                                           );
@@ -2400,7 +2408,7 @@ class _EventPageState extends State<EventPage> {
                               setState(() {
                                 panierV.compteurPanier = 0;
                                 panierV.selectedPizz.clear();
-                                setHorraire = !setHorraire;
+                                setHorraire = false;
 
                               });
                             },

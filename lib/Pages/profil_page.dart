@@ -569,7 +569,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                   : _selectedMenu == 3
                                   ? listFidelite
                                   : _selectedMenu == 4
-                                  ? listCommande
+                                  ? DelayedAnimation(delay : 200 , child: listCommande)
                                   : null))),
                   SizedBox(height: 20,),
                   ElevatedButton(
