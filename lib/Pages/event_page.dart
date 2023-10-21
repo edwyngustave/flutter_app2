@@ -1978,544 +1978,495 @@ class _EventPageState extends State<EventPage> {
           horizontal: 15,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            DelayedAnimation(
-              delay: 500,
-              child: Consumer<Mysql>(builder: (context, mysql, child) {
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text("Votre Panier",
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600)),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        /*TextButton(
-                            child: Text("Utiliser mes points",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    backgroundColor: colorButton == true ? Colors.grey[850] :Colors.black,
-                                    fontWeight: FontWeight.w600)),
-                            onPressed: () async {
-                              await mysql.getFidelite();
-                              setState(()  {
-                                if(mysql.points >= 110){
-                                  colorButton = !colorButton ;
-                                }
-                              });
-                            },
-                          ),*/
-                      ],
-                    ),
-                    if (mysql.points >= 110 && colorButton == true)
-                      Text(
-                        "Vous bénéficiez d'une remise de 10€ sur cette commande grâce à vos points",
-                        style: GoogleFonts.poppins(
-                            color: Colors.lightGreenAccent,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500),
-                      )
-                  ],
-                );
-              }),
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: DelayedAnimation(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              DelayedAnimation(
                 delay: 500,
-                child: Text(
-                  "Toute commande non récupérée vous fera perdre l'éligibilité d'utiliser l'application pour commander",
-                  style: GoogleFonts.poppins(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            panierV.selectedPizz.isNotEmpty
-                ? Expanded(
-                    child: DelayedAnimation(
-                      delay: 800,
-                      child: ListView.builder(
-                        itemCount: panierV.selectedPizz.length,
-                        itemBuilder: (context, index) {
-                          var item = panierV.selectedPizz[index];
-                          return Dismissible(
-                            background: Container(
-                              color: Colors.red,
-                            ),
-                            key: Key(item.toString()),
-                            onDismissed: (direction) {
-                              setState(() {
-                                panierV.selectedPizz.removeAt(index);
-                                panierV.decrement();
-                                print(panierV.selectedPizz);
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                Card(
-                                  color: Colors.grey[850],
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      if (item.containsKey('pizzaM'))
-                                        Row(
-                                          children: <Widget>[
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Pizza Medium :",
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.white),
-                                                ),
-                                                Text(
-                                                  item["pizzaM"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                                Text(
-                                                  item["tailleM"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                                Text(
-                                                  item["prixM"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      else if (item.containsKey('pizzaL'))
-                                        Row(
-                                          children: <Widget>[
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Pizza Large :",
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.white),
-                                                ),
-                                                Text(
-                                                  item["pizzaL"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                                Text(
-                                                  item["tailleL"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                                Text(
-                                                  item["prixL"],
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white70),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      else if (item.containsKey('wraps'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Wrap :",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["wraps"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixW"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        )
-                                      else if (item.containsKey('boissons'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Boisson :",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["boissons"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixB"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        )
-                                      else if (item
-                                          .containsKey('pizzaSupMedium'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Pizza Medium Composée :",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["pizzaSupMedium"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixSupMedium"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        )
-                                      else if (item
-                                          .containsKey('pizzaSupLarge'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Pizza Large :",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["pizzaSupLarge"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixSupLarge"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        )
-                                      else if (item
-                                          .containsKey('pizzaCompoMedium'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Pizza Medium : ",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["pizzaCompoMedium"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixCompoMedium"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        )
-                                      else if (item
-                                          .containsKey('pizzaCompoLarge'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Pizza Large Composée :",
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              item["pizzaCompoLarge"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                            Text(
-                                              item["prixCompoLarge"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white70),
-                                            ),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                : Padding(
-                    padding: EdgeInsets.only(top: 80),
-                    child: DelayedAnimation(
-                      delay: 500,
-                      child: Center(
-                        child: Text(
-                          "Votre panier est vide...",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-            SizedBox(
-              height: 10,
-            ),
-            if (setHorraire == true)
-              Consumer<Mysql>(builder: (context, mysql, child) {
-                return Center(
-                  child: DropdownButton<String>(
-                      dropdownColor: Colors.grey[700],
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 20,
-                      elevation: 16,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w500),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.grey[700],
-                      ),
-                      onChanged: (String? newValue) {
-                        if (horraireNoDispo.contains(newValue) ||
-                            indisponibleCreneau.contains(newValue)) {
-                          return; // sortir de la méthode onChanged sans mettre à jour l'état si la valeur sélectionnée n'est pas disponible
-                        }
-                        setState(() {
-                          horaireSelectionneSoir = newValue ?? '';
-                          horaireSelectionneMidi = newValue ?? '';
-                        });
-                        print(horaireSelectionneSoir);
-                      },
-                      value: periodValue == "soir"
-                          ? horaireSelectionneSoir
-                          : horaireSelectionneMidi,
-                      items: periodValue == "soir"
-                          ? horairesSoir
-                              .map<DropdownMenuItem<String>>((String value) {
-                              bool isRed =
-                                  horraireNoDispo.contains(value) ||
-                                      indisponibleCreneau.contains(value);
-                              return DropdownMenuItem<String>(
-                                key: Key(value),
-                                value: value,
-                                child: Text(
-                                  value,
+                child: Consumer<Mysql>(builder: (context, mysql, child) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text("Votre Panier",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          /*TextButton(
+                              child: Text("Utiliser mes points",
                                   style: TextStyle(
-                                      color: isRed ? Colors.red : Colors.white,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              );
-                            }).toList()
-                          : horairesMidi
-                              .map<DropdownMenuItem<String>>((String value1) {
-                              bool isRed =
-                                  horraireNoDispo.contains(value1) ||
-                                      indisponibleCreneau.contains(value1);
-                              return DropdownMenuItem<String>(
-                                key: Key(value1),
-                                value: value1,
-                                child: Text(
-                                  value1,
-                                  style: TextStyle(
-                                      color: isRed ? Colors.red : Colors.white,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              );
-                            }).toList()),
-                );
-              }),
-            SizedBox(
-              height: 50,
-            ),
-            Center(
-              child: DelayedAnimation(
-                delay: 1000,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                panierV.compteurPanier = 0;
-                                panierV.selectedPizz.clear();
-                                setHorraire = false;
-
-                              });
-                            },
-                            child: Text(
-                              "Vider le panier",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600),
-                            )),
-                        Consumer<Mysql>(builder: (context, mysql, child) {
-                          return TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                isLoadingHoraire = true;
-                              });
-
-                              await getPizzaCountTest();
-                              await fetchIndisponibleCreneau();
-                              await getPeriodValueWhereEstIsTrue();
-
-                              await Future.delayed(Duration(seconds: 2));
-
-                              setState(() {
-                                isLoadingHoraire = false;
-                                // mysql.getHorraireNotDispo();
-                                print(mysql.horraireNoDispo);
-                                setHorraire = !setHorraire;
-                              });
-                            },
-                            child: isLoadingHoraire
-                                ? CircularProgressIndicator()
-                                : Text("Choisir un horaire ?",
-                                    style: TextStyle(
                                       color: Colors.blue,
-                                      fontWeight: FontWeight.w600,
-                                    )),
-                          );
-                        }),
-                      ],
-                    ),
-                  ],
+                                      backgroundColor: colorButton == true ? Colors.grey[850] :Colors.black,
+                                      fontWeight: FontWeight.w600)),
+                              onPressed: () async {
+                                await mysql.getFidelite();
+                                setState(()  {
+                                  if(mysql.points >= 110){
+                                    colorButton = !colorButton ;
+                                  }
+                                });
+                              },
+                            ),*/
+                        ],
+                      ),
+                      if (mysql.points >= 110 && colorButton == true)
+                        Text(
+                          "Vous bénéficiez d'une remise de 10€ sur cette commande grâce à vos points",
+                          style: GoogleFonts.poppins(
+                              color: Colors.lightGreenAccent,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        )
+                    ],
+                  );
+                }),
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: DelayedAnimation(
+                  delay: 500,
+                  child: Text(
+                    "Toute commande non récupérée vous fera perdre l'éligibilité d'utiliser l'application pour commander",
+                    style: GoogleFonts.poppins(
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Consumer<Mysql>(builder: (context, mysql, child) {
-                return DelayedAnimation(
-                  delay: 1000,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(),
-                      primary: Colors.white24,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 60,
-                        vertical: 13,
-                      ),
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading2 = true;
-                      });
-
-                      // Afficher le CircularProgressIndicator pendant un certain temps
-                      await Future.delayed(Duration(
-                          seconds:
-                              2)); // Remplacez 2 par la durée souhaitée en secondes
-
-                      // Charger les données de manière asynchrone
-                      bool isBanned = await isUserBanned();
-
-                      setState(() {
-                        isLoading2 = false;
-                      });
-                      if (isBanned) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.grey[850],
-                              title: Text("Un problème.. !",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                              content: Text(
-                                  "Vous ne pouvez pas commander avec votre compte car à plusieurs reprises vous avez commandé sans venir récupérer votre commande, merci de prendre contact avec nos services pour débloquer votre compte",
-                                  style:
-                                      GoogleFonts.poppins(color: Colors.white)),
-                              actions: <Widget>[
-                                ElevatedButton(
-                                  child: Text("OK",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white)),
-                                  onPressed: () {
-                                    setState(() {
-                                      Navigator.pop(context);
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      shape: StadiumBorder(),
-                                      backgroundColor: Colors.grey[700],
-                                      elevation: 20),
-                                ),
-                              ],
+              SizedBox(
+                height: 20,
+              ),
+              panierV.selectedPizz.isNotEmpty
+                  ? Expanded(
+                      child: DelayedAnimation(
+                        delay: 800,
+                        child: ListView.builder(
+                          itemCount: panierV.selectedPizz.length,
+                          itemBuilder: (context, index) {
+                            var item = panierV.selectedPizz[index];
+                            return Dismissible(
+                              background: Container(
+                                color: Colors.red,
+                              ),
+                              key: Key(item.toString()),
+                              onDismissed: (direction) {
+                                setState(() {
+                                  panierV.selectedPizz.removeAt(index);
+                                  panierV.decrement();
+                                  print(panierV.selectedPizz);
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  Card(
+                                    color: Colors.grey[850],
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        if (item.containsKey('pizzaM'))
+                                          Row(
+                                            children: <Widget>[
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Pizza Medium :",
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.white),
+                                                  ),
+                                                  Text(
+                                                    item["pizzaM"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                  Text(
+                                                    item["tailleM"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                  Text(
+                                                    item["prixM"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        else if (item.containsKey('pizzaL'))
+                                          Row(
+                                            children: <Widget>[
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Pizza Large :",
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.white),
+                                                  ),
+                                                  Text(
+                                                    item["pizzaL"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                  Text(
+                                                    item["tailleL"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                  Text(
+                                                    item["prixL"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white70),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        else if (item.containsKey('wraps'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Wrap :",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["wraps"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixW"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          )
+                                        else if (item.containsKey('boissons'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Boisson :",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["boissons"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixB"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          )
+                                        else if (item
+                                            .containsKey('pizzaSupMedium'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Pizza Medium Composée :",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["pizzaSupMedium"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixSupMedium"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          )
+                                        else if (item
+                                            .containsKey('pizzaSupLarge'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Pizza Large :",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["pizzaSupLarge"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixSupLarge"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          )
+                                        else if (item
+                                            .containsKey('pizzaCompoMedium'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Pizza Medium : ",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["pizzaCompoMedium"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixCompoMedium"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          )
+                                        else if (item
+                                            .containsKey('pizzaCompoLarge'))
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Pizza Large Composée :",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                item["pizzaCompoLarge"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                              Text(
+                                                item["prixCompoLarge"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white70),
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
                           },
-                        );
-                      } else {
+                        ),
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(top: 80),
+                      child: DelayedAnimation(
+                        delay: 500,
+                        child: Center(
+                          child: Text(
+                            "Votre panier est vide...",
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+              SizedBox(
+                height: 10,
+              ),
+              if (setHorraire == true)
+                Consumer<Mysql>(builder: (context, mysql, child) {
+                  return Center(
+                    child: DropdownButton<String>(
+                        dropdownColor: Colors.grey[700],
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 20,
+                        elevation: 16,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey[700],
+                        ),
+                        onChanged: (String? newValue) {
+                          if (horraireNoDispo.contains(newValue) ||
+                              indisponibleCreneau.contains(newValue)) {
+                            return; // sortir de la méthode onChanged sans mettre à jour l'état si la valeur sélectionnée n'est pas disponible
+                          }
+                          setState(() {
+                            horaireSelectionneSoir = newValue ?? '';
+                            horaireSelectionneMidi = newValue ?? '';
+                          });
+                          print(horaireSelectionneSoir);
+                        },
+                        value: periodValue == "soir"
+                            ? horaireSelectionneSoir
+                            : horaireSelectionneMidi,
+                        items: periodValue == "soir"
+                            ? horairesSoir
+                                .map<DropdownMenuItem<String>>((String value) {
+                                bool isRed =
+                                    horraireNoDispo.contains(value) ||
+                                        indisponibleCreneau.contains(value);
+                                return DropdownMenuItem<String>(
+                                  key: Key(value),
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        color: isRed ? Colors.red : Colors.white,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                );
+                              }).toList()
+                            : horairesMidi
+                                .map<DropdownMenuItem<String>>((String value1) {
+                                bool isRed =
+                                    horraireNoDispo.contains(value1) ||
+                                        indisponibleCreneau.contains(value1);
+                                return DropdownMenuItem<String>(
+                                  key: Key(value1),
+                                  value: value1,
+                                  child: Text(
+                                    value1,
+                                    style: TextStyle(
+                                        color: isRed ? Colors.red : Colors.white,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                );
+                              }).toList()),
+                  );
+                }),
+              SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: DelayedAnimation(
+                  delay: 1000,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  panierV.compteurPanier = 0;
+                                  panierV.selectedPizz.clear();
+                                  setHorraire = false;
+
+                                });
+                              },
+                              child: Text(
+                                "Vider le panier",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w600),
+                              )),
+                          Consumer<Mysql>(builder: (context, mysql, child) {
+                            return TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  isLoadingHoraire = true;
+                                });
+
+                                await getPizzaCountTest();
+                                await fetchIndisponibleCreneau();
+                                await getPeriodValueWhereEstIsTrue();
+
+                                await Future.delayed(Duration(seconds: 2));
+
+                                setState(() {
+                                  isLoadingHoraire = false;
+                                  // mysql.getHorraireNotDispo();
+                                  print(mysql.horraireNoDispo);
+                                  setHorraire = !setHorraire;
+                                });
+                              },
+                              child: isLoadingHoraire
+                                  ? CircularProgressIndicator()
+                                  : Text("Choisir un horaire ?",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Center(
+                child: Consumer<Mysql>(builder: (context, mysql, child) {
+                  return DelayedAnimation(
+                    delay: 1000,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(),
+                        primary: Colors.white24,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 60,
+                          vertical: 13,
+                        ),
+                      ),
+                      onPressed: () async {
                         setState(() {
                           isLoading2 = true;
                         });
@@ -2526,230 +2477,279 @@ class _EventPageState extends State<EventPage> {
                                 2)); // Remplacez 2 par la durée souhaitée en secondes
 
                         // Charger les données de manière asynchrone
-                        bool isLoc = await getLocation();
-                        // await mysql.getCommandeClientEnCours();
+                        bool isBanned = await isUserBanned();
 
                         setState(() {
                           isLoading2 = false;
                         });
-                        setState(() {
-                          if (isLoc==false) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor: Colors.grey[850],
-                                  title: Text("Oups... Pas encore l'heure",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600)),
-                                  content: Text(
-                                      "Nous ne sommes pas encore ouverts.",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white)),
-                                  actions: <Widget>[
-                                    Consumer<Mysql>(
-                                        builder: (context, mysql, child) {
-                                      return ElevatedButton(
-                                        child: Text("OK",
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.white)),
-                                        onPressed: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            shape: StadiumBorder(),
-                                            backgroundColor: Colors.grey[700],
-                                            elevation: 20),
-                                      );
-                                    }),
-                                  ],
-                                );
-                              },
-                            );
-                          } else if (mysql.commandeEnAttente == 1.toInt()) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor: Colors.grey[850],
-                                  title: Text("Oups... ",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600)),
-                                  content: Text(
-                                      "Vous avez déjà une commande en attente ou en cours.",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white)),
-                                  actions: <Widget>[
-                                    Consumer<Mysql>(
-                                        builder: (context, mysql, child) {
-                                      return ElevatedButton(
-                                        child: Text("OK",
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.white)),
-                                        onPressed: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            shape: StadiumBorder(),
-                                            backgroundColor: Colors.grey[700],
-                                            elevation: 20),
-                                      );
-                                    }),
-                                  ],
-                                );
-                              },
-                            );
-                          } else if (mysql.horraireNoDispo.toString().contains(
-                                  horaireSelectionneSoir.toString()) ||
-                              mysql.horraireNoDispo.toString().contains(
-                                  horaireSelectionneMidi.toString())) {
-                          } else if (panierV.selectedPizz.isEmpty) {
-                          } else if (panierV.selectedPizz.isNotEmpty) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor: Colors.grey[850],
-                                  title: Text("A table !",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600)),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                          "Votre Commande va être prise en compte,"
-                                          " une fois validé par nos services, "
-                                          "elle apparaîtrera dans votre page d'accueil. "
-                                          "Si vous ne choisissez pas d'horraire, votre commande sera traité immédiatement dans l'ordre d'arrivée.",
-                                          style: GoogleFonts.poppins(
-                                              color: Colors.white)),
-                                    ],
+                        if (isBanned) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.grey[850],
+                                title: Text("Un problème.. !",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
+                                content: Text(
+                                    "Vous ne pouvez pas commander avec votre compte car à plusieurs reprises vous avez commandé sans venir récupérer votre commande, merci de prendre contact avec nos services pour débloquer votre compte",
+                                    style:
+                                        GoogleFonts.poppins(color: Colors.white)),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("OK",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white)),
+                                    onPressed: () {
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        shape: StadiumBorder(),
+                                        backgroundColor: Colors.grey[700],
+                                        elevation: 20),
                                   ),
-                                  actions: <Widget>[
-                                    Consumer<Mysql>(
-                                        builder: (context, mysql, child) {
-                                      return ElevatedButton(
-                                        child: Text("Commander",
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          setState(() {
+                            isLoading2 = true;
+                          });
+
+                          // Afficher le CircularProgressIndicator pendant un certain temps
+                          await Future.delayed(Duration(
+                              seconds:
+                                  2)); // Remplacez 2 par la durée souhaitée en secondes
+
+                          // Charger les données de manière asynchrone
+                          bool isLoc = await getLocation();
+                          // await mysql.getCommandeClientEnCours();
+
+                          setState(() {
+                            isLoading2 = false;
+                          });
+                          setState(() {
+                            if (isLoc==false) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.grey[850],
+                                    title: Text("Oups... Pas encore l'heure",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    content: Text(
+                                        "Nous ne sommes pas encore ouverts.",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white)),
+                                    actions: <Widget>[
+                                      Consumer<Mysql>(
+                                          builder: (context, mysql, child) {
+                                        return ElevatedButton(
+                                          child: Text("OK",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white)),
+                                          onPressed: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              shape: StadiumBorder(),
+                                              backgroundColor: Colors.grey[700],
+                                              elevation: 20),
+                                        );
+                                      }),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else if (mysql.commandeEnAttente == 1.toInt()) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.grey[850],
+                                    title: Text("Oups... ",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    content: Text(
+                                        "Vous avez déjà une commande en attente ou en cours.",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white)),
+                                    actions: <Widget>[
+                                      Consumer<Mysql>(
+                                          builder: (context, mysql, child) {
+                                        return ElevatedButton(
+                                          child: Text("OK",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white)),
+                                          onPressed: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              shape: StadiumBorder(),
+                                              backgroundColor: Colors.grey[700],
+                                              elevation: 20),
+                                        );
+                                      }),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else if (mysql.horraireNoDispo.toString().contains(
+                                    horaireSelectionneSoir.toString()) ||
+                                mysql.horraireNoDispo.toString().contains(
+                                    horaireSelectionneMidi.toString())) {
+                            } else if (panierV.selectedPizz.isEmpty) {
+                            } else if (panierV.selectedPizz.isNotEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.grey[850],
+                                    title: Text("A table !",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            "Votre Commande va être prise en compte,"
+                                            " une fois validé par nos services, "
+                                            "elle apparaîtrera dans votre page d'accueil. "
+                                            "Si vous ne choisissez pas d'horraire, votre commande sera traité immédiatement dans l'ordre d'arrivée.",
                                             style: GoogleFonts.poppins(
                                                 color: Colors.white)),
-                                        onPressed: () async {
-                                          // le if pour traitement BDD
-                                          print(panierV.selectedPizz);
-                                          try {
-                                            final insertedValues =
-                                                await mysql.insertDataFirebase(
-                                                    panierV.selectedPizz,
-                                                    sumAll.toString(),
-                                                  periodValue == "soir"
-                                                      ? horaireSelectionneSoir
-                                                      : horaireSelectionneMidi);
-                                            print('Bien Bon');
-                                          } catch (e) {
-                                            print(
-                                                'Erreur lors de l\'insertion des données : $e');
-                                          }
-                                          await getFcmTokenFromDatabase();
-                                          handleNewOrder(userDocFin);
-                                          print(userDocFin);
-
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MyApp()));
-                                          panierV.compteurPanier = 0;
-                                          panierV.selectedPizz.clear();
-                                          setState(() {});
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            shape: StadiumBorder(),
-                                            backgroundColor: Colors.grey[700],
-                                            elevation: 20),
-                                      );
-                                    }),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        });
-                      }
-                      ;
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: isLoading2
-                                ? '' // Laissez la chaîne vide lorsque isLoading2 est vrai
-                                : 'COMMANDER ',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            children: isLoading2
-                                ? <InlineSpan>[
-                                    WidgetSpan(
-                                      child: CircularProgressIndicator(
-                                          valueColor: AlwaysStoppedAnimation<
-                                                  Color>(
-                                              Colors
-                                                  .white70)), // Affichez le CircularProgressIndicator lorsque isLoading2 est vrai
+                                      ],
                                     ),
-                                  ]
-                                : null, // Sinon, n'ajoutez pas de child
-                          ),
-                          TextSpan(
-                            text: isLoading2 ? "" : "$sumAll €",
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                decoration: colorButton == true
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          if (colorButton == true)
+                                    actions: <Widget>[
+                                      Consumer<Mysql>(
+                                          builder: (context, mysql, child) {
+                                        return ElevatedButton(
+                                          child: Text("Commander",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white)),
+                                          onPressed: () async {
+                                            // le if pour traitement BDD
+                                            print(panierV.selectedPizz);
+                                            try {
+                                              final insertedValues =
+                                                  await mysql.insertDataFirebase(
+                                                      panierV.selectedPizz,
+                                                      sumAll.toString(),
+                                                    periodValue == "soir"
+                                                        ? horaireSelectionneSoir
+                                                        : horaireSelectionneMidi);
+                                              print('Bien Bon');
+                                            } catch (e) {
+                                              print(
+                                                  'Erreur lors de l\'insertion des données : $e');
+                                            }
+                                            await getFcmTokenFromDatabase();
+                                            handleNewOrder(userDocFin);
+                                            print(userDocFin);
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MyApp()));
+                                            panierV.compteurPanier = 0;
+                                            panierV.selectedPizz.clear();
+                                            setState(() {});
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              shape: StadiumBorder(),
+                                              backgroundColor: Colors.grey[700],
+                                              elevation: 20),
+                                        );
+                                      }),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          });
+                        }
+                        ;
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
                             TextSpan(
-                              text: "  ${sumAll -= 10}€",
+                              text: isLoading2
+                                  ? '' // Laissez la chaîne vide lorsque isLoading2 est vrai
+                                  : 'COMMANDER ',
                               style: GoogleFonts.poppins(
-                                  color: Colors.lightGreenAccent,
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              children: isLoading2
+                                  ? <InlineSpan>[
+                                      WidgetSpan(
+                                        child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation<
+                                                    Color>(
+                                                Colors
+                                                    .white70)), // Affichez le CircularProgressIndicator lorsque isLoading2 est vrai
+                                      ),
+                                    ]
+                                  : null, // Sinon, n'ajoutez pas de child
+                            ),
+                            TextSpan(
+                              text: isLoading2 ? "" : "$sumAll €",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  decoration: colorButton == true
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500),
                             ),
-                        ],
+                            if (colorButton == true)
+                              TextSpan(
+                                text: "  ${sumAll -= 10}€",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.lightGreenAccent,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: DelayedAnimation(
-                delay: 2500,
-                child: Text(
-                  "07.83.80.77.40",
-                  style: GoogleFonts.poppins(
-                    color: Colors.grey,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
+                  );
+                }),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: DelayedAnimation(
+                  delay: 2500,
+                  child: Text(
+                    "07.83.80.77.40",
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       );
     });
 //////////////////////////////////////////////////////////////////////////

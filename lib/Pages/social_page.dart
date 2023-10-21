@@ -118,6 +118,10 @@ class SocialPage extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () async {
                           //  Navigator.push(context, MaterialPageRoute(builder: (context) => MdpForget(), fullscreenDialog: true),);
+                            /*final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                              email: "provend@live.fr",
+                              password: "azertyui",
+                            ); */
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),
