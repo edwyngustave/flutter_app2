@@ -211,7 +211,7 @@ class _MyAppState extends State<MyApp> {
                 }
               } else {
                 // Vous pouvez afficher un indicateur de chargement ici si nécessaire
-                return CircularProgressIndicator();
+                return Container();
               }
             },
           );
